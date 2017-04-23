@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UpcomingMovies.MovieDetailPage"
+             x:vm ="clr-namespace:MoviesMobileApp.ViewModels"
+             xmlns:roundedbox="clr-namespace:RoundedBoxView.Forms.Plugin.Abstractions;assembly=RoundedBoxView.Forms.Plugin.Abstractions"
+             xmlns:converter="clr-namespace:UpcomingMovies.Converters"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:RankIntToRankColorConverter x:Key="RankToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Orientation="Vertical" >
+        <Grid>
+
+            <Image Source="{Binding BackdropImagePath}" Aspect="AspectFill" ></Image>
+            <ContentView Padding="20">
+                <StackLayout Spacing="7">
+                    <roundedbox:RoundedBoxView HeightRequest="80" WidthRequest="80" 
+                                               CornerRadius="50" BorderThickness="20" 
+                                               BackgroundColor="{Binding RankPercentage, Converter={StaticResource RankToColorConverter}}">
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                               HorizontalOptions="End" VerticalOptions="Start" TextColor="White" FontSize="Large"
+                               Text="{Binding RankPercentage, StringFormat='{0}%'}" />
+                    </roundedbox:RoundedBoxView>
+
+                    <Label HeightRequest="40" WidthRequest="80" 
+                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                           BackgroundColor="Gray" TextColor="White" HorizontalOptions="End" FontSize="Large" 
+                           VerticalOptions="Start" Text="{Binding Year}" />
+                </StackLayout>
+            </ContentView>
+
+            <StackLayout Orientation="Vertical" Padding="20, 0, 20, 20" Spacing="5" Margin="0, 250, 0, 0">
+                <!--<ContentView Padding="20">
+                    <BoxView  BackgroundColor="White" Opacity="0.8"></BoxView>
+                    <Image HeightRequest="250" Source="{Binding PosterImagePath}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0" ></Image>
+                </ContentView>-->
+
+                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
+                    <StackLayout Spacing="3" Orientation="Vertical">
+                        <Label Text="{Binding Title}" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap" FontSize="Large"></Label>
+                        <Label Text="{Binding OriginalTitle}" FontSize="Small" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap" IsVisible="{Binding IsOriginalTitleVisible}" ></Label>
+                    </StackLayout>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20,10,20,10">
+                    <Label Text="{Binding ReleaseDate}" FontSize="Small" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20,10,20,10">
+                    <Label Text="{Binding Genres}" FontSize="Small" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
+                    <Label Text="{Binding Overview}" FontSize="Medium" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
+                    <Button Command="{Binding OpenMovieLinkCommand}" Text="{Binding ButtonText}" FontSize="Medium" TextColor="Black"/>
+                </ContentView>
+
+
+            </StackLayout>
+        </Grid>
+
+    </ScrollView>
+</ContentPage>
