@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:UpcomingMovies.ViewModels"
              xmlns:behavior="clr-namespace:UpcomingMovies.Behaviors"
              xmlns:converter="clr-namespace:UpcomingMovies.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="UpcomingMovies.MainPage"
              Title="Upcoming Movies">
 
@@ -40,11 +41,32 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ImageCell ImageSource="{Binding PosterSource}" 
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                                <ffimageloading:CachedImage 
+                                    x:Name="Image" HorizontalOptions="Center" VerticalOptions="Center"
+			                        LoadingPlaceholder="hourglass.png"
+                                    ErrorPlaceholder="noimage.png"
+                                    DownsampleToViewSize="false"
+			                        Aspect="AspectFill"
+                                    Source="{Binding PosterPath}"
+                                    WidthRequest="60"
+                                    HeightRequest="90">
+                                </ffimageloading:CachedImage>
+                                
+                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding Title}" TextColor="#666"></Label>
+                                    <Label Text="{Binding Description}" TextColor="#AAA"></Label>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <!--<ImageCell ImageSource="{Binding PosterSource}" 
                                Text="{Binding Title}" 
                                Detail="{Binding Description}" 
                                DetailColor="#AAA" 
-                               TextColor="#666"></ImageCell>
+                               TextColor="#666"></ImageCell>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

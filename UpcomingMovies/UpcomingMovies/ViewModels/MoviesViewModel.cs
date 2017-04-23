@@ -6,6 +6,7 @@ using UpcomingMovies.Services;
 using Xamarin.Forms;
 using UpcomingMovies.Extensions;
 using System.Windows.Input;
+using System.Collections.Generic;
 
 namespace UpcomingMovies.ViewModels
 {
@@ -13,7 +14,7 @@ namespace UpcomingMovies.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<MovieItemViewModel> MovieItems { get; protected set; } = new ObservableCollection<MovieItemViewModel>();
+        public MovieItemsObservableCollection MovieItems { get; protected set; } = new MovieItemsObservableCollection();
 
         private bool _isLoadig;
         public bool IsLoading
@@ -75,10 +76,7 @@ namespace UpcomingMovies.ViewModels
                     // TODO: tell user
                 }
 
-                foreach (var item in items)
-                {
-                    MovieItems.Add(item.ToMovieItemViewModel());
-                }
+                MovieItems.Add(items);
 
                 _loadedPages = page;
             }
