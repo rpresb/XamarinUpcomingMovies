@@ -2,7 +2,6 @@
 using Android.Content.PM;
 using Android.OS;
 using FFImageLoading.Forms.Droid;
-using RoundedBoxView.Forms.Plugin.Droid;
 
 namespace UpcomingMovies.Droid
 {
@@ -23,7 +22,6 @@ namespace UpcomingMovies.Droid
             global::Xamarin.Forms.Forms.Init(this, bundle);
 
             CachedImageRenderer.Init();
-            RoundedBoxViewRenderer.Init();
 
             LoadApplication(new App());
         }
