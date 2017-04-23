@@ -16,7 +16,7 @@
     </ContentPage.Resources>
 
     <ContentPage.BindingContext>
-        <local:MoviesViewModel />
+        
     </ContentPage.BindingContext>
 
     <StackLayout>
@@ -40,7 +40,11 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ImageCell ImageSource="{Binding PosterSource}" Text="{Binding Title}" Detail="{Binding Description}" DetailColor="#AAA" TextColor="#666"></ImageCell>
+                    <ImageCell ImageSource="{Binding PosterSource}" 
+                               Text="{Binding Title}" 
+                               Detail="{Binding Description}" 
+                               DetailColor="#AAA" 
+                               TextColor="#666"></ImageCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

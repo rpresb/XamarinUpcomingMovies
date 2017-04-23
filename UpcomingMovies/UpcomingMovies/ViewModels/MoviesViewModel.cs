@@ -5,6 +5,7 @@ using UpcomingMovies.Models;
 using UpcomingMovies.Services;
 using Xamarin.Forms;
 using UpcomingMovies.Extensions;
+using System.Windows.Input;
 
 namespace UpcomingMovies.ViewModels
 {
@@ -15,7 +16,35 @@ namespace UpcomingMovies.ViewModels
         public ObservableCollection<MovieItemViewModel> MovieItems { get; protected set; } = new ObservableCollection<MovieItemViewModel>();
 
         private bool _isLoadig;
-        public bool IsLoading { get { return _isLoadig; } protected set { _isLoadig = value; OnPropertyChanged("IsLoading"); } }
+        public bool IsLoading
+        {
+            get { return _isLoadig; }
+            protected set
+            {
+                _isLoadig = value;
+                OnPropertyChanged("IsLoading");
+            }
+        }
+
+        private ICommand _loadNextPageCommand;
+        public ICommand LoadNextPageCommand
+        {
+            get
+            {
+                return _loadNextPageCommand = _loadNextPageCommand ??
+                    new Command<MovieItemViewModel>(async (item) => await ExecuteLoadNextPageCommand(), CanExecuteLoadNextPageCommand);
+            }
+        }
+
+        private ICommand _showDetailPageCommand;
+        public ICommand ShowDetailPageCommand
+        {
+            get
+            {
+                return _showDetailPageCommand = _showDetailPageCommand ??
+                    new Command<MovieItemViewModel>(async (item) => await ExecuteShowDetailPageCommand(item));
+            }
+        }
 
         private IDataService<IMovieItem> _dataService;
         private INavigationService _navigationService;
@@ -36,21 +65,27 @@ namespace UpcomingMovies.ViewModels
 
         public async Task LoadPage(int page)
         {
-            IsLoading = true;
-            var items = await _dataService.GetItemsAtAsync(page);
-
-            if (items.Count == 0)
+            try
             {
-                // TODO: tell user
-            }
+                IsLoading = true;
+                var items = await _dataService.GetItemsAtAsync(page);
 
-            foreach (var item in items)
+                if (items.Count == 0)
+                {
+                    // TODO: tell user
+                }
+
+                foreach (var item in items)
+                {
+                    MovieItems.Add(item.ToMovieItemViewModel());
+                }
+
+                _loadedPages = page;
+            }
+            finally
             {
-                MovieItems.Add(item.ToMovieItemViewModel());
+                IsLoading = false;
             }
-
-            _loadedPages = page;
-            IsLoading = false;
 
         }
 
@@ -63,6 +98,21 @@ namespace UpcomingMovies.ViewModels
             catch
             {
             }
+        }
+
+        public async Task ExecuteLoadNextPageCommand()
+        {
+            await LoadPage(_loadedPages + 1);
+        }
+
+        public bool CanExecuteLoadNextPageCommand(MovieItemViewModel item)
+        {
+            return !IsLoading && MovieItems.Count - 1 == item.MovieIndex;
+        }
+
+        public async Task ExecuteShowDetailPageCommand(MovieItemViewModel item)
+        {
+            await _navigationService.NavigateToDetail(item.MovieIndex);
         }
     }
 }

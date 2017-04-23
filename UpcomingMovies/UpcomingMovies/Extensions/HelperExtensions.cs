@@ -14,12 +14,7 @@ namespace UpcomingMovies.Extensions
                 MovieIndex = item.Index,
                 Title = item.Title,
                 Description = $"({(int)(item.VoteAverage * 10)}%) {item.Genres}",
-                PosterSource = new UriImageSource
-                {
-                    Uri = new Uri(item.PosterThumbPath),
-                    CachingEnabled = true,
-                    CacheValidity = new TimeSpan(10, 0, 1, 0)
-                }
+                PosterPath = item.PosterThumbPath
             };
         }
 
@@ -38,13 +33,13 @@ namespace UpcomingMovies.Extensions
                 {
                     Uri = new Uri(movieItem.PosterPath),
                     CachingEnabled = true,
-                    CacheValidity = new TimeSpan(1, 0, 0, 0)
+                    CacheValidity = new TimeSpan(0, 0, 1, 0)
                 },
                 BackdropImageSource = new UriImageSource()
                 {
                     Uri = new Uri(movieItem.BackdropPath), // TODO: what if empty?
                     CachingEnabled = true,
-                    CacheValidity = new TimeSpan(1, 0, 0, 0)
+                    CacheValidity = new TimeSpan(0, 0, 1, 0)
                 },
                 MoviePageUri = new Uri(movieItem.MovieUrl),
 
