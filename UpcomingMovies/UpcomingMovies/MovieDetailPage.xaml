@@ -47,13 +47,13 @@
                     <Label Text="{Binding Overview}" FontSize="Medium" TextColor="Black" LineBreakMode="WordWrap" ></Label>
                 </ContentView>
                 <ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
-                    <Image Source="{Binding PosterImagePath}" Opacity="1"
+                    <Image Source="{Binding PosterImagePath}"
                            HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand" Aspect="AspectFit" 
                            Grid.Column="0" Grid.Row="0"></Image>
                 </ContentView>
-                <ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
+                <!--<ContentView BackgroundColor="White" Opacity="0.8" Padding="20">
                     <Button Command="{Binding OpenMovieLinkCommand}" Text="{Binding ButtonText}" FontSize="Medium" TextColor="Black"/>
-                </ContentView>
+                </ContentView>-->
             </StackLayout>
         </Grid>
 
