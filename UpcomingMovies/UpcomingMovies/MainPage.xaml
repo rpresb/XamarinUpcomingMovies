@@ -21,7 +21,7 @@
     </ContentPage.BindingContext>
 
     <StackLayout>
-        <ListView Grid.Column="1" x:Name="ListView" RowHeight="90"
+        <ListView Grid.Column="1" x:Name="ListView" RowHeight="100"
                   ItemsSource="{Binding MovieItems}" 
                   IsRefreshing="{Binding IsLoading, Mode=OneWay}">
 
@@ -50,14 +50,15 @@
                                     ErrorPlaceholder="noimage.png"
                                     DownsampleToViewSize="false"
 			                        Aspect="AspectFill"
-                                    Source="{Binding PosterPath}"
-                                    WidthRequest="60"
-                                    HeightRequest="90">
+                                    Source="{Binding PosterImagePath}"
+                                    WidthRequest="66"
+                                    HeightRequest="100">
                                 </ffimageloading:CachedImage>
                                 
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
-                                    <Label Text="{Binding Title}" TextColor="#666"></Label>
+                                    <Label Text="{Binding Title}" TextColor="#666" FontSize="Large"></Label>
                                     <Label Text="{Binding Description}" TextColor="#AAA"></Label>
+                                    <Label Text="{Binding ReleaseDate}" TextColor="#AAA"></Label>
                                 </StackLayout>
                             </StackLayout>
                         </ViewCell.View>

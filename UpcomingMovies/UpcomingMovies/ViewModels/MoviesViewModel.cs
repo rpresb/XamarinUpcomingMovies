@@ -33,7 +33,7 @@ namespace UpcomingMovies.ViewModels
             get
             {
                 return _loadNextPageCommand = _loadNextPageCommand ??
-                    new Command<MovieItemViewModel>(async (item) => await ExecuteLoadNextPageCommand(), CanExecuteLoadNextPageCommand);
+                    new Command<MovieDetailViewModel>(async (item) => await ExecuteLoadNextPageCommand(), CanExecuteLoadNextPageCommand);
             }
         }
 
@@ -43,7 +43,7 @@ namespace UpcomingMovies.ViewModels
             get
             {
                 return _showDetailPageCommand = _showDetailPageCommand ??
-                    new Command<MovieItemViewModel>(async (item) => await ExecuteShowDetailPageCommand(item));
+                    new Command<MovieDetailViewModel>(async (item) => await ExecuteShowDetailPageCommand(item));
             }
         }
 
@@ -103,14 +103,14 @@ namespace UpcomingMovies.ViewModels
             await LoadPage(_loadedPages + 1);
         }
 
-        public bool CanExecuteLoadNextPageCommand(MovieItemViewModel item)
+        public bool CanExecuteLoadNextPageCommand(MovieDetailViewModel item)
         {
             return !IsLoading && MovieItems.Count - 1 == item.MovieIndex;
         }
 
-        public async Task ExecuteShowDetailPageCommand(MovieItemViewModel item)
+        public async Task ExecuteShowDetailPageCommand(MovieDetailViewModel item)
         {
-            await _navigationService.NavigateToDetail(item.MovieIndex);
+            await _navigationService.NavigateToDetailAsync(item);
         }
     }
 }

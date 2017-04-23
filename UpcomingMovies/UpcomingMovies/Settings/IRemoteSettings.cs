@@ -8,6 +8,7 @@ namespace UpcomingMovies.Settings
         string ImageBaseUrl { get; }
         string MoviePageBaseUrl { get; }
         string DiscoverMethod { get; }
+        string UpcomingMethod { get; }
         string PosterImageMethod { get; }
         string PosterThumbImageMethod { get; }
         string BackdropImageMethod { get; }

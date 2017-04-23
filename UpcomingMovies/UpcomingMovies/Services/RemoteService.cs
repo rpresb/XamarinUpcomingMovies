@@ -54,7 +54,7 @@ namespace UpcomingMovies.Services
         {
             Items = new List<IMovieItem>();
 
-            var pageData = await RequestPageDataFromMovieDb(page);
+            var pageData = await RequestUpcomingPageDataFromMovieDb(page);
 
             return GenerateMovieListFromJsonPageData(pageData);
         }
@@ -131,14 +131,14 @@ namespace UpcomingMovies.Services
             }
         }
 
-        private async Task<PageData> RequestPageDataFromMovieDb(int page)
+        private async Task<PageData> RequestUpcomingPageDataFromMovieDb(int page)
         {
             PageData pageData = null;
             var items = new List<MovieItemData>();
             var uriString = CreateRequestUri
             (
                 Settings.BaseUrl,
-                Settings.DiscoverMethod,
+                Settings.UpcomingMethod,
                 new Dictionary<string, object>()
                 {
                     { "api_key", Settings.ApiKey },
@@ -188,7 +188,7 @@ namespace UpcomingMovies.Services
                 items.Add(item);
             }
 
-            return items;
+            return items.OrderByDescending(x => x.ReleaseDate).ToList();
         }
 
     }

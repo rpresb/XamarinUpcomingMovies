@@ -10,7 +10,7 @@ using UpcomingMovies.ViewModels;
 
 namespace UpcomingMovies.Extensions
 {
-    public class MovieItemsObservableCollection : ObservableCollection<MovieItemViewModel>
+    public class MovieItemsObservableCollection : ObservableCollection<MovieDetailViewModel>
     {
         bool isObserving = true;
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
@@ -26,7 +26,7 @@ namespace UpcomingMovies.Extensions
             isObserving = false;
             foreach (var i in items)
             {
-                Add(i.ToMovieItemViewModel());
+                Add(i.ToMovieDetailViewModel());
             }
             isObserving = true;
 
