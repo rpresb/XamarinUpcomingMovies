@@ -13,7 +13,7 @@
 ## Screenshots
 
 <img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-list.png?raw=true" height="200" />
-<br />
+&nbsp;
 <img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-details.png?raw=true" height="200" />
-<br />
+&nbsp;
 <img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-details-2.png?raw=true" height="200" />
