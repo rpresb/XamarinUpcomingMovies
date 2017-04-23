@@ -14,6 +14,6 @@
 
 <img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-list.png?raw=true" height="200" />
 <br />
-<img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshotscreenshot-details.png?raw=true" height="200" />
+<img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-details.png?raw=true" height="200" />
 <br />
 <img src="https://github.com/rpresb/XamarinUpcomingMovies/blob/development/screenshots/screenshot-details-2.png?raw=true" height="200" />
