@@ -22,6 +22,7 @@
 
     <StackLayout>
         <ListView Grid.Column="1" x:Name="ListView" RowHeight="100"
+                  CachingStrategy="RecycleElement"
                   ItemsSource="{Binding MovieItems}" 
                   IsRefreshing="{Binding IsLoading, Mode=OneWay}">
 
