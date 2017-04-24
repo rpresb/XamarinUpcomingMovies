@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:UpcomingMovies.ViewModels"
+             xmlns:behavior="clr-namespace:UpcomingMovies.Behaviors"
+             xmlns:converter="clr-namespace:UpcomingMovies.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="UpcomingMovies.MainPage"
+             Title="Upcoming Movies">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:ItemVisibilityEventArgsToItemConverter x:Key="ItemVisibilityConverter" />
+            <converter:SelectedItemChangedEventArgsToItemConverter x:Key="SelectedItemConverter" />
+            <converter:RankIntToRankColorConverter x:Key="RankToColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        
+    </ContentPage.BindingContext>
+
+    <StackLayout>
+        <ListView Grid.Column="1" x:Name="ListView" RowHeight="100"
+                  CachingStrategy="RecycleElement"
+                  ItemsSource="{Binding MovieItems}" 
+                  IsRefreshing="{Binding IsLoading, Mode=OneWay}">
+
+            <ListView.Behaviors>
+                <behavior:EventToCommandBehavior 
+                    EventName="ItemAppearing" 
+                    Command="{Binding LoadNextPageCommand}" 
+                    Converter="{StaticResource ItemVisibilityConverter}">
+                </behavior:EventToCommandBehavior>
+
+                <behavior:EventToCommandBehavior
+                    EventName="ItemSelected"
+                    Command="{Binding ShowDetailPageCommand}"
+                    Converter="{StaticResource SelectedItemConverter}">
+                </behavior:EventToCommandBehavior>
+            </ListView.Behaviors>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                                <ffimageloading:CachedImage 
+                                    x:Name="Image" HorizontalOptions="Center" VerticalOptions="Center"
+			                        LoadingPlaceholder="hourglass.png"
+                                    ErrorPlaceholder="noimage.png"
+                                    DownsampleToViewSize="false"
+			                        Aspect="AspectFill"
+                                    Source="{Binding PosterImagePath}"
+                                    WidthRequest="66"
+                                    HeightRequest="100">
+                                </ffimageloading:CachedImage>
+                                
+                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding Title}" TextColor="#666" FontSize="Large"></Label>
+                                    <Label Text="{Binding Description}" TextColor="#AAA"></Label>
+                                    <Label Text="{Binding ReleaseDate}" TextColor="#AAA"></Label>
+                                </StackLayout>
+                            </StackLayout>
+                        </ViewCell.View>
+                    </ViewCell>
+                    <!--<ImageCell ImageSource="{Binding PosterSource}" 
+                               Text="{Binding Title}" 
+                               Detail="{Binding Description}" 
+                               DetailColor="#AAA" 
+                               TextColor="#666"></ImageCell>-->
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="#e5a64b" IsVisible="{Binding IsLoading}">
+            <Label Text="Loading..." TextColor="White"  FontSize="Medium" HorizontalOptions="Center" BackgroundColor="Transparent"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
