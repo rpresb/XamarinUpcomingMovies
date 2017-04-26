@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="UpcomingMovies.MovieDetailPage"
+             x:vm ="clr-namespace:MoviesMobileApp.ViewModels"
+             xmlns:converter="clr-namespace:UpcomingMovies.Converters"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:RankIntToRankColorConverter x:Key="RankToColorConverter" />
+            <converter:IsNotEmptyConverter x:Key="IsNotEmptyConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView Orientation="Vertical" >
+        <Grid>
+            <Image Source="{Binding BackdropImagePath}" Aspect="AspectFill" Opacity="0.3"></Image>
+
+            <ContentView Padding="20">
+                <StackLayout Spacing="7">
+                    <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                               HorizontalOptions="End" VerticalOptions="Start" TextColor="White" FontSize="Large"
+                               HeightRequest="80" WidthRequest="80" 
+                               BackgroundColor="{Binding RankPercentage, Converter={StaticResource RankToColorConverter}}"
+                               Text="{Binding RankPercentage, StringFormat='{0}%'}" />
+                    <Label HeightRequest="40" WidthRequest="80" 
+                           VerticalTextAlignment="Center" HorizontalTextAlignment="Center" 
+                           BackgroundColor="Gray" TextColor="White" HorizontalOptions="End" FontSize="Large" 
+                           VerticalOptions="Start" Text="{Binding Year}" />
+                </StackLayout>
+            </ContentView>
+
+            <StackLayout Orientation="Vertical" Padding="20, 0, 20, 20" Spacing="5">
+                <ContentView Padding="20">
+                    <BoxView  BackgroundColor="White" Opacity="0.5"></BoxView>
+                    <ffimageloading:CachedImage x:Name="Image" HeightRequest="250"
+                                                HorizontalOptions="Center" VerticalOptions="Center" Grid.Column="0"
+			                                    LoadingPlaceholder="hourglass.png" ErrorPlaceholder="noimage.png" 
+                                                DownsampleToViewSize="false" Aspect="AspectFit"
+                                                Source="{Binding PosterImagePath}"></ffimageloading:CachedImage>
+                </ContentView>
+
+                <ContentView BackgroundColor="White" Opacity="0.7" Padding="20">
+                    <StackLayout Spacing="3" Orientation="Vertical">
+                        <Label Text="{Binding Title}" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap" FontSize="Large"></Label>
+                        <Label Text="{Binding OriginalTitle}" FontSize="Small" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap" IsVisible="{Binding IsOriginalTitleVisible}" ></Label>
+                    </StackLayout>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.7" Padding="20,10,20,10" 
+                             IsVisible="{Binding ReleaseDate, Converter={StaticResource IsNotEmptyConverter}}">
+                    <Label Text="{Binding ReleaseDate}" FontSize="Small" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.7" Padding="20,10,20,10"
+                             IsVisible="{Binding Genres, Converter={StaticResource IsNotEmptyConverter}}">
+                    <Label Text="{Binding Genres}" FontSize="Small" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+                <ContentView BackgroundColor="White" Opacity="0.7" Padding="20"
+                             IsVisible="{Binding Overview, Converter={StaticResource IsNotEmptyConverter}}">
+                    <Label Text="{Binding Overview}" FontSize="Medium" TextColor="Black" LineBreakMode="WordWrap" ></Label>
+                </ContentView>
+            </StackLayout>
+        </Grid>
+
+    </ScrollView>
+</ContentPage>
