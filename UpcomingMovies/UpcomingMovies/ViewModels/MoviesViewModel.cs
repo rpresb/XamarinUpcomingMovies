@@ -7,6 +7,8 @@ using Xamarin.Forms;
 using UpcomingMovies.Extensions;
 using System.Windows.Input;
 using System.Collections.Generic;
+using UpcomingMovies.Exceptions;
+using System.Runtime.CompilerServices;
 
 namespace UpcomingMovies.ViewModels
 {
@@ -23,7 +25,18 @@ namespace UpcomingMovies.ViewModels
             protected set
             {
                 _isLoadig = value;
-                OnPropertyChanged("IsLoading");
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isConnected = true;
+        public bool IsConnected
+        {
+            get { return _isConnected; }
+            protected set
+            {
+                _isConnected = value;
+                OnPropertyChanged();
             }
         }
 
@@ -44,6 +57,18 @@ namespace UpcomingMovies.ViewModels
             {
                 return _showDetailPageCommand = _showDetailPageCommand ??
                     new Command<MovieDetailViewModel>(async (item) => await ExecuteShowDetailPageCommand(item));
+            }
+        }
+
+        public ICommand RefreshListView
+        {
+            get
+            {
+                return new Command(async () =>
+                {
+                    MovieItems.Clear();
+                    await LoadPage(1);
+                });
             }
         }
 
@@ -76,9 +101,14 @@ namespace UpcomingMovies.ViewModels
                     // TODO: tell user
                 }
 
-                MovieItems.Add(items);
+                MovieItems.AddMovieItems(items);
 
                 _loadedPages = page;
+                IsConnected = true;
+            }
+            catch (ContentUnavailableException ex)
+            {
+                IsConnected = false;
             }
             finally
             {
@@ -87,7 +117,7 @@ namespace UpcomingMovies.ViewModels
 
         }
 
-        protected void OnPropertyChanged(string propertyName)
+        protected void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
             try
             {

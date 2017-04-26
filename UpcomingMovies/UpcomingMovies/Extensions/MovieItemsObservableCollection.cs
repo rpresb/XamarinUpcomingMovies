@@ -21,7 +21,7 @@ namespace UpcomingMovies.Extensions
             }
         }
 
-        public void Add(List<IMovieItem> items)
+        public void AddMovieItems(List<IMovieItem> items)
         {
             isObserving = false;
             foreach (var i in items)

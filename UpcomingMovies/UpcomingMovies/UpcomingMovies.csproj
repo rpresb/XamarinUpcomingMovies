@@ -40,16 +40,21 @@
     </Compile>
     <Compile Include="Behaviors\BehaviorBase.cs" />
     <Compile Include="Behaviors\EventToCommandBehavior.cs" />
+    <Compile Include="Converters\IsNotEmptyConverter.cs" />
+    <Compile Include="Converters\InverseBooleanConverter.cs" />
     <Compile Include="Converters\ItemVisibilityEventArgsToItemConverter.cs" />
     <Compile Include="Converters\RankIntToRankColorConverter.cs" />
     <Compile Include="Converters\SelectedItemChangedEventArgsToItemConverter.cs" />
+    <Compile Include="Exceptions\ContentUnavailableException.cs" />
     <Compile Include="Extensions\HelperExtensions.cs" />
     <Compile Include="Extensions\MovieItemsObservableCollection.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\IMovieItem.cs" />
+    <Compile Include="Models\Json\GenreListData.cs" />
     <Compile Include="Models\Json\MovieItemData.cs" />
+    <Compile Include="Models\Json\GenreData.cs" />
     <Compile Include="Models\Json\PageData.cs" />
     <Compile Include="Models\MovieItem.cs" />
     <Compile Include="MovieDetailPage.xaml.cs">

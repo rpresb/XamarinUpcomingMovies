@@ -13,18 +13,20 @@
             <converter:ItemVisibilityEventArgsToItemConverter x:Key="ItemVisibilityConverter" />
             <converter:SelectedItemChangedEventArgsToItemConverter x:Key="SelectedItemConverter" />
             <converter:RankIntToRankColorConverter x:Key="RankToColorConverter" />
+            <converter:InverseBooleanConverter x:Key="InverseBoolConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ContentPage.BindingContext>
-        
-    </ContentPage.BindingContext>
-
     <StackLayout>
+        <StackLayout Padding="10" Orientation="Vertical" BackgroundColor="Red" IsVisible="{Binding IsConnected, Converter={StaticResource InverseBoolConverter}}">
+            <Label Text="Please check your connection." TextColor="White"  FontSize="Medium" HorizontalOptions="Center" BackgroundColor="Transparent"/>
+        </StackLayout>
         <ListView Grid.Column="1" x:Name="ListView" RowHeight="100"
                   CachingStrategy="RecycleElement"
                   ItemsSource="{Binding MovieItems}" 
-                  IsRefreshing="{Binding IsLoading, Mode=OneWay}">
+                  IsRefreshing="{Binding IsLoading, Mode=OneWay}"
+                  IsPullToRefreshEnabled="True"
+                  RefreshCommand="{Binding RefreshListView}">
 
             <ListView.Behaviors>
                 <behavior:EventToCommandBehavior 
@@ -55,7 +57,7 @@
                                     WidthRequest="66"
                                     HeightRequest="100">
                                 </ffimageloading:CachedImage>
-                                
+
                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
                                     <Label Text="{Binding Title}" TextColor="#666" FontSize="Large"></Label>
                                     <Label Text="{Binding Description}" TextColor="#AAA"></Label>
@@ -64,11 +66,6 @@
                             </StackLayout>
                         </ViewCell.View>
                     </ViewCell>
-                    <!--<ImageCell ImageSource="{Binding PosterSource}" 
-                               Text="{Binding Title}" 
-                               Detail="{Binding Description}" 
-                               DetailColor="#AAA" 
-                               TextColor="#666"></ImageCell>-->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

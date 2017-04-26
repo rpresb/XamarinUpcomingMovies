@@ -9,6 +9,7 @@ using UpcomingMovies.Settings;
 using Xamarin.Forms;
 using System.Net.Http;
 using Newtonsoft.Json;
+using UpcomingMovies.Exceptions;
 
 [assembly: Dependency(typeof(UpcomingMovies.Services.RemoteService))]
 namespace UpcomingMovies.Services
@@ -18,30 +19,7 @@ namespace UpcomingMovies.Services
         public List<IMovieItem> Items { get; private set; }
         public IRemoteSettings Settings { get; private set; }
 
-        public static Dictionary<int, string> GenresDict = new Dictionary<int, string>()
-        {
-            { 28, "Action" },
-            { 12, "Adventure" },
-            { 16, "Animation" },
-            { 35, "Comedy" },
-            { 80, "Crime" },
-            { 99, "Documentary" },
-            { 18, "Drama" },
-            { 10751, "Family" },
-            { 14, "Fantasy" },
-            { 10769, "Foreign" },
-            { 36, "History" },
-            { 27, "Horror" },
-            { 10402, "Music" },
-            { 9648, "Mystery" },
-            { 10749, "Romance" },
-            { 878, "Science Fiction" },
-            { 10770, "TV Movie" },
-            { 53, "Thriller" },
-            { 10752, "War" },
-            { 37, "Western" },
-        };
-
+        private List<GenreData> _genresCollection = null;
         private HttpClient _client;
 
         public RemoteService()
@@ -50,13 +28,23 @@ namespace UpcomingMovies.Services
             Settings = DependencyService.Get<IRemoteSettings>();
         }
 
+        public async Task<List<GenreData>> GetGenresAsync()
+        {
+            if (_genresCollection == null)
+            {
+                _genresCollection = await RequestGenreListFromMovieDb();
+            }
+
+            return _genresCollection;
+        }
+
         public async Task<List<IMovieItem>> GetItemsAtAsync(int page)
         {
             Items = new List<IMovieItem>();
 
             var pageData = await RequestUpcomingPageDataFromMovieDb(page);
 
-            return GenerateMovieListFromJsonPageData(pageData);
+            return await GenerateMovieListFromJsonPageDataAsync(pageData);
         }
 
         public int GetCountOfItemsOnPage()
@@ -119,11 +107,13 @@ namespace UpcomingMovies.Services
             return sb.ToString();
         }
 
-        private static string CreateGenresString(IEnumerable<int> genres)
+        private async Task<string> CreateGenresStringAsync(IEnumerable<int> genres)
         {
             try
             {
-                return string.Join(" / ", genres.Select(g => GenresDict[g]));
+                var cachedGenres = await GetGenresAsync();
+
+                return string.Join(" / ", genres.Select(g => cachedGenres.FirstOrDefault(c => c.Id.Equals(g)).Name));
             }
             catch
             {
@@ -131,10 +121,32 @@ namespace UpcomingMovies.Services
             }
         }
 
+        private async Task<List<GenreData>> RequestGenreListFromMovieDb()
+        {
+            GenreListData genreListData = null;
+            var uriString = CreateRequestUri
+            (
+                Settings.BaseUrl,
+                Settings.GenreMethod,
+                new Dictionary<string, object>()
+                {
+                    { "api_key", Settings.ApiKey },
+                    { "language", "en-US" },
+                }
+            );
+
+            var content = await GetContentFromUriAsync(uriString);
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                genreListData = JsonConvert.DeserializeObject<GenreListData>(content);
+            }
+
+            return genreListData?.Genres;
+        }
+
         private async Task<PageData> RequestUpcomingPageDataFromMovieDb(int page)
         {
             PageData pageData = null;
-            var items = new List<MovieItemData>();
             var uriString = CreateRequestUri
             (
                 Settings.BaseUrl,
@@ -146,19 +158,16 @@ namespace UpcomingMovies.Services
                 }
             );
 
-            var response = await _client.GetAsync(uriString);
-
-            if (response.IsSuccessStatusCode)
+            var content = await GetContentFromUriAsync(uriString);
+            if (!string.IsNullOrWhiteSpace(content))
             {
-                // get data
-                var content = await response.Content.ReadAsStringAsync();
                 pageData = JsonConvert.DeserializeObject<PageData>(content);
             }
 
             return pageData;
         }
 
-        private List<IMovieItem> GenerateMovieListFromJsonPageData(PageData pageData)
+        private async Task<List<IMovieItem>> GenerateMovieListFromJsonPageDataAsync(PageData pageData)
         {
             var items = new List<IMovieItem>();
             var jsonItems = pageData.Results;
@@ -179,7 +188,7 @@ namespace UpcomingMovies.Services
 
                     // Add some additional info
                     Index = (pageData.Page - 1) * GetCountOfItemsOnPage() + jsonItems.IndexOf(jsonItem),
-                    Genres = CreateGenresString(jsonItem.GenreIds),
+                    Genres = await CreateGenresStringAsync(jsonItem.GenreIds),
                     BackdropPath = GetBackdropImagePath(jsonItem.BackdropPath),
                     MovieUrl = GetMovieUrl(jsonItem.Id),
                     PosterPath = GetPosterImagePath(jsonItem.PosterPath),
@@ -189,6 +198,28 @@ namespace UpcomingMovies.Services
             }
 
             return items.OrderByDescending(x => x.ReleaseDate).ToList();
+        }
+
+        private async Task<string> GetContentFromUriAsync(string uriString)
+        {
+            string content = null;
+
+            try
+            {
+                var response = await _client.GetAsync(uriString);
+
+                // TODO: Handle other status codes
+                if (response.IsSuccessStatusCode)
+                {
+                    content = await response.Content.ReadAsStringAsync();
+                    return content;
+                }
+            }
+            catch // ignore all connection exceptions and raise custom exception when content is unavailable
+            {
+            }
+
+            throw new ContentUnavailableException();
         }
 
     }

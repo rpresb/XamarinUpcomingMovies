@@ -1,4 +1,6 @@
-﻿namespace UpcomingMovies.Settings
+﻿using System;
+
+namespace UpcomingMovies.Settings
 {
     public class RemoteSettings : IRemoteSettings
     {
@@ -6,6 +8,7 @@
         public string BaseUrl { get; } = "http://api.themoviedb.org/3";
         public string ImageBaseUrl { get; } = "https://image.tmdb.org";
         public string MoviePageBaseUrl { get; } = "https://www.themoviedb.org/movie";
+        public string GenreMethod { get; } = "/genre/movie/list";
         public string DiscoverMethod { get; } = "/discover/movie";
         public string UpcomingMethod { get; } = "/movie/upcoming";
         public string PosterImageMethod { get; } = "/t/p/w370";

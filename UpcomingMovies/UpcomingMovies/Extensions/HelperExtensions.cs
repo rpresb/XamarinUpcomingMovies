@@ -17,16 +17,18 @@ namespace UpcomingMovies.Extensions
                 releaseDateString = releaseDate.ToString("MM/dd/yyyy");
             }
 
+            int voteAverage = (int)Math.Ceiling(movieItem.VoteAverage * 10);
+
             return new MovieDetailViewModel
             {
                 MovieIndex = movieItem.Index,
                 Title = movieItem.Title,
                 OriginalTitle = movieItem.OriginalTitle,
-                Description = $"({(int)(movieItem.VoteAverage * 10)}%) {movieItem.Genres}",
+                Description = $"({voteAverage}%) {movieItem.Genres}",
                 Genres = movieItem.Genres,
                 Overview = movieItem.Overview,
                 Year = Convert.ToDateTime(movieItem.ReleaseDate).Year,
-                RankPercentage = (int)(movieItem.VoteAverage * 10),
+                RankPercentage = voteAverage,
                 ButtonText = "Open Website",
                 PosterImagePath = movieItem.PosterPath,
                 BackdropImagePath = movieItem.BackdropPath,
